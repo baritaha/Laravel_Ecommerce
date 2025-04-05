@@ -36,9 +36,8 @@ class ItemController extends Controller
     {
         $categories = Category::all(); // Fetch all categories
         $users = User::all();
-        return view('items.create', compact('categories','users')); // Pass categories to the view
+        return view('items.create', compact('categories', 'users')); // Pass categories to the view
     }
-
     /**
      * Store a newly created item.
      */
@@ -57,12 +56,11 @@ class ItemController extends Controller
 
         if ($request->hasFile('image')) {
             $filename = $request->file('image')->getClientOriginalName();
-            $path = $request->file('image')->move(public_path('images'), $filename);
+            $request->file('image')->move(public_path('images'), $filename);
             $validated['image'] = $filename;
         }
-
         // Associate the item with the authenticated admin
-       // $validated['user_id'] = Auth::id();
+        // $validated['user_id'] = Auth::id();
 
         Item::create($validated);
 

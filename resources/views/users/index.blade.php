@@ -12,9 +12,9 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped table-hover" style="opacity: 0.7;">
         <thead style="background-color: chocolate; color: white; text-align: center;">
-            <tr>
+            <tr class="text-uppercase fw-bold text-dark text-center text-decoration-underline table-primary table-striped">
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>

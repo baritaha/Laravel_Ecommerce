@@ -23,7 +23,7 @@
                                             <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapse-{{ $item->id }}"
                                                 aria-expanded="false">
-                                             <span class="fw-bold text-warning">  {{ $item->name }}</span>
+                                                <span class="fw-bold text-warning"> {{ $item->name }}</span>
                                             </button>
                                         </h2>
                                         <div id="collapse-{{ $item->id }}" class="accordion-collapse collapse"

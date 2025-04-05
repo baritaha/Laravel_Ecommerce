@@ -53,6 +53,37 @@
         .dark\:text-gray-100 {
             color: white !important;
         }
+
+        .btnDesign {
+            background-color: #F5F5DC;
+            color: goldenrod;
+            border: 2px solid goldenrod;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+
+        }
+
+        .btnDesign:hover {
+            background-color: rgb(124, 91, 7);
+            color: #F5F5DC;
+            border: 2px solid #F5F5DC;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+
+        }
+
+        .titleText {
+            color: #f3f3b7;
+            opacity: 0.7;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-decoration: underline;
+            text-shadow: 12px 12px 24px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 
