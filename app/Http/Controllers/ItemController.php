@@ -16,7 +16,7 @@ class ItemController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'admin']); // Middleware to protect all routes for admins only
+        $this->middleware(['auth']); // Middleware to protect all routes for admins only
     }
 
     /**
@@ -24,11 +24,13 @@ class ItemController extends Controller
      */
     public function index()
     {
+
         // Admins can view all users and their items
         $users = User::with('items')->get();
-        return view('items.index', compact('users'));
+        $items = Item::with('category')->paginate(10); // Fetch items with pagination
+        return view('items.index', compact('items', 'users'));
+        //return view('items.index', compact('users'));
     }
-
     /**
      * Show the form for creating a new item.
      */
@@ -127,4 +129,10 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Item deleted successfully');
     }
+    // public function userItems()
+    // {
+    //     // Users can only see their own items
+    //     $items = Item::where('user_id', Auth::id())->get();
+    //     return view('items.userItems', compact('items'));
+    // }
 }

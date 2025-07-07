@@ -8,11 +8,10 @@ use App\Models\Item;
 
 class Category extends Model
 {
-    // Define fillable attributes for mass assignment
-    protected $fillable = ['name'];
-    public function items()
-{
-    return $this->hasMany(Item::class); // One category has many items
-}
+    protected $fillable = ['name','image'];
 
+    public function items()
+    {
+        return $this->hasMany(Item::class); // One category has many items
+    }
 }

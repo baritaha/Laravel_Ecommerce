@@ -12,10 +12,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::all();
-        return view('categories.index',compact('categories'));
+        $categories = Category::all();
+        return view('categories.index', compact('categories'));
     }
-
+    public function collections()
+    {
+        $categories = Category::all();
+        return view('categories.collections', compact('categories'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -29,14 +33,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        Category::create($request->only('name'));
+        if ($request->hasFile('image')) {
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images/categories'), $filename);
+            $validated['image'] = $filename;
+        }
+
+        Category::create($validated);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully!');
     }
+
 
 
     /**
@@ -44,9 +56,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category=Category::find($id);
-        return view('categories.show',compact('category'));
-
+        $category = Category::find($id);
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -65,24 +76,40 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $category =Category::findOrFail($id);
-        $category->update($request->all()); // Update the category
+        $category = Category::findOrFail($id);
+        $data = $request->only('name'); // Only grab safe fields
+
+        if ($request->hasFile('image')) {
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images/categories'), $filename);
+            $data['image'] = $filename;
+        }
+
+        $category->update($data);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
     }
 
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
-    {
-        $category =Category::findOrFail($id);
-        $category->delete(); // Delete the category
+  public function destroy($id)
+{
+    $category = Category::findOrFail($id);
 
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully!');
+    // Delete the image file if it exists
+    if ($category->image && file_exists(public_path('public/images/' . $category->image))) {
+        unlink(public_path('public/images/' . $category->image));
     }
+
+    $category->delete();
+
+    return redirect()->route('categories.index')->with('success', 'Category deleted successfully!');
+}
 
 }
