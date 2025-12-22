@@ -12,7 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('items')->get();
         return view('categories.index', compact('categories'));
     }
     public function collections()
@@ -92,9 +92,6 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
     }
-
-
-
     /**
      * Remove the specified resource from storage.
      */

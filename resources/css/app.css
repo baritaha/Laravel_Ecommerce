@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body { @apply bg-gray-100 text-gray-900; }
+}
+
+/* Background for all pages */
+.page-bg{
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(242,145,32,.16), transparent 60%),
+    radial-gradient(700px 380px at 90% 18%, rgba(242,145,32,.10), transparent 65%),
+    linear-gradient(180deg, #f3f4f6 0%, #eef2f7 100%);
+}
+
+
+
+
+/* reusable components */
+@layer components {
+  .card {
+    @apply bg-white/90 backdrop-blur border border-gray-200 shadow-sm rounded-2xl;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium bg-gray-100 border border-gray-200 text-gray-700;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-semibold text-white transition;
+    @apply bg-primary hover:bg-primary-600;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-semibold bg-white border border-gray-200 text-gray-800 transition;
+    @apply hover:border-primary hover:text-primary;
+  }
+
+  .link-nav {
+  @apply px-3 py-2 rounded-xl font-medium transition;
+  @apply text-gray-700 hover:text-primary hover:bg-primary-50;
+}
+
+.link-nav-active {
+  @apply px-3 py-2 rounded-xl font-semibold transition;
+  @apply text-primary bg-primary-100 border border-primary-200;
+}
+
+}

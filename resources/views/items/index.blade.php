@@ -3,170 +3,146 @@
 @section('title', 'Items')
 
 @section('content')
-    <div class="container">
-        <h1 class="d-flex justify-content-center fw-bold mb-4">All Items</h1>
-        @if (Auth::user()->is_admin)
-            <a href="{{ route('items.create') }}" class="btn btn-primary mb-4">Create New Item</a>
-        @endif
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+    {{-- Header --}}
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Items</h1>
+            <p class="text-sm text-gray-600">
+                Manage store items.
+            </p>
+        </div>
 
-        <div class="row">
-            @if (Auth::user()->is_admin)
-                <div class="col-12 mb-4">
-                    <div class="alert alert-info text-center">
-                        <strong>Admin View:</strong> You can manage items for all users.
-                    </div>
-                </div>
-            @endif
-            @if ($items->isEmpty() && Auth::user()->is_admin)
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <strong>No items found.</strong> Please create items for users.
-                    </div>
-                </div>
-            @elseif (!Auth::user()->$items && !Auth::user()->is_admin)
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <strong>No items found.</strong> You haven't added any items yet.
-                    </div>
-                </div>
-                {{-- if the user not admin it will get all items depend od user id --}}
-            @elseif (!Auth::user()->is_admin)
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <strong>My Items:</strong> You can manage your own items.
-                    </div>
-                </div>
-                <div class="accordion" id="accordionUserItems">
-                    @foreach (Auth::user()->items as $item)
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading-{{ $item->id }}">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse-{{ $item->id }}" aria-expanded="false">
-                                    <span class="fw-bold text-warning"> {{ $item->name }}</span>
-                                </button>
-                            </h2>
-                            <div id="collapse-{{ $item->id }}" class="accordion-collapse collapse"
-                                aria-labelledby="heading-{{ $item->id }}" data-bs-parent="#accordionUserItems">
-                                <div class="accordion-body">
-                                    @if ($item->image)
-                                        <img src="{{ asset('/images/' . $item->image) }}" class="img-fluid mb-2"
-                                            alt="{{ $item->name }}" style="height: 150px;">
-                                    @else
-                                        <p class="text-muted">No Image Available</p>
-                                    @endif
-                                    <p><strong>Price:</strong> ${{ $item->price }}</p>
-                                    <p><strong>Qty:</strong> {{ $item->quantity }}</p>
-                                    <p><strong>Color:</strong> {{ $item->color }}</p>
-                                    <p class="text-muted"><strong>Created:</strong>
-                                        {{ $item->created_at->format('d M, Y') }}</p>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{{ route('items.show', $item->id) }}" class="btn btn-info btn-sm">Show</a>
-                                        <a href="{{ route('items.edit', $item->id) }}"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal"
-                                            onclick="setDeleteModal('{{ route('items.destroy', $item->id) }}', '{{ $item->name }}')">
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @elseif (Auth::user()->is_admin && !$users->isEmpty())
-                @foreach ($users as $user)
-                    <div class="col-md-6 col-lg-4 mb-4" style="opacity: 0.7;">
-                        <div class="card shadow-lg">
-                            <div class="card-header text-center fw-bold" style="background-color: #2b6cb0; color: white;">
-                                {{ $user->name }}'s Items
-                            </div>
-                            <div class="card-body">
-                                <div class="accordion" id="accordion-{{ $user->id }}">
-                                    @foreach ($user->items as $item)
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="heading-{{ $item->id }}">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapse-{{ $item->id }}" aria-expanded="false">
-                                                    <span class="fw-bold text-warning"> {{ $item->name }}</span>
-                                                </button>
-                                            </h2>
-                                            <div id="collapse-{{ $item->id }}" class="accordion-collapse collapse"
-                                                aria-labelledby="heading-{{ $item->id }}"
-                                                data-bs-parent="#accordion-{{ $user->id }}">
-                                                <div class="accordion-body">
-                                                    @if ($item->image)
-                                                        <img src="{{ asset('/images/' . $item->image) }}"
-                                                            class="img-fluid mb-2" alt="{{ $item->name }}"
-                                                            style="height: 150px;">
-                                                    @else
-                                                        <p class="text-muted">No Image Available</p>
-                                                    @endif
-                                                    <p><strong>Price:</strong> ${{ $item->price }}</p>
-                                                    <p><strong>Qty:</strong> {{ $item->quantity }}</p>
-                                                    <p><strong>Color:</strong> {{ $item->color }}</p>
-                                                    <p class="text-muted"><strong>Created:</strong>
-                                                        {{ $item->created_at->format('d M, Y') }}</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <a href="{{ route('items.show', $item->id) }}"
-                                                            class="btn btn-info btn-sm">Show</a>
-                                                        <a href="{{ route('items.edit', $item->id) }}"
-                                                            class="btn btn-primary btn-sm">Edit</a>
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                            onclick="setDeleteModal('{{ route('items.destroy', $item->id) }}', '{{ $item->name }}')">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <a href="{{ route('items.create') }}"
+           class="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-600 transition">
+            + Create Item
+        </a>
+    </div>
+
+    {{-- Success message --}}
+    @if (session('success'))
+        <div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Category Filter --}}
+    <div class="mb-4">
+        <form method="GET" action="{{ route('items.index') }}"
+              class="flex flex-wrap items-center gap-3">
+
+            <label class="text-sm font-medium text-gray-700">
+                Filter by category:
+            </label>
+
+            <select name="category"
+                    onchange="this.form.submit()"
+                    class="rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary">
+                <option value="">All Categories</option>
+
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}"
+                        {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
                 @endforeach
+            </select>
 
+            @if(request()->has('category'))
+                <a href="{{ route('items.index') }}"
+                   class="text-sm text-primary hover:underline">
+                    Clear filter
+                </a>
             @endif
-
-
-
-
-        </div>
+        </form>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete <span id="itemName" class="fw-bold bg-danger text-white p-1"></span> ?
-                </div>
-                <div class="modal-footer">
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
+    {{-- Items Table --}}
+    <div class="rounded-2xl bg-white/85 backdrop-blur-xl shadow-xl border border-white overflow-hidden">
+
+        @if($items->isEmpty())
+            <div class="p-8 text-center text-gray-500">
+                No items found.
             </div>
-        </div>
-    </div>
+        @else
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
 
-    <script>
-        function setDeleteModal(actionUrl, itemName) {
-            // Set the form action dynamically
-            document.getElementById('deleteForm').action = actionUrl;
-            // Display the item name in the modal
-            document.getElementById('itemName').textContent = itemName;
-        }
-    </script>
+                    <thead class="bg-gray-50 border-y border-gray-200">
+                        <tr class="text-left text-gray-600">
+                            <th class="px-6 py-3 font-semibold">Image</th>
+                            <th class="px-6 py-3 font-semibold">Name</th>
+                            <th class="px-6 py-3 font-semibold">Category</th>
+                            <th class="px-6 py-3 font-semibold">Price</th>
+                            <th class="px-6 py-3 font-semibold">Qty</th>
+                            <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach ($items as $item)
+                            <tr class="hover:bg-primary-50/60 transition">
+
+                                {{-- Image --}}
+                                <td class="px-6 py-4">
+                                    @if($item->image)
+                                        <img src="{{ asset('images/items/' . $item->image) }}"
+                                             class="h-12 w-16 rounded-lg object-cover border">
+                                    @else
+                                        <span class="text-gray-400 text-xs">No image</span>
+                                    @endif
+                                </td>
+
+                                {{-- Name --}}
+                                <td class="px-6 py-4 font-semibold text-gray-900">
+                                    {{ $item->name }}
+                                </td>
+
+                                {{-- Category --}}
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $item->category->name ?? '—' }}
+                                </td>
+
+                                {{-- Price --}}
+                                <td class="px-6 py-4 text-gray-700">
+                                    ${{ number_format($item->price, 2) }}
+                                </td>
+
+                                {{-- Quantity --}}
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $item->quantity }}
+                                </td>
+
+                                {{-- Actions --}}
+                                <td class="px-6 py-4">
+                                    <div class="flex justify-end gap-2">
+
+                                        <a href="{{ route('items.edit', $item) }}"
+                                           class="rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-primary-800 hover:bg-primary-100 transition">
+                                            Edit
+                                        </a>
+
+                                        <form method="POST"
+                                              action="{{ route('items.destroy', $item) }}"
+                                              onsubmit="return confirm('Delete this item?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button
+                                                class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-red-700 hover:bg-red-100 transition">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+            </div>
+        @endif
+    </div>
+</div>
 @endsection

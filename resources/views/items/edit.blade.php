@@ -3,55 +3,69 @@
 @section('title', 'Edit Item')
 
 @section('content')
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow-lg p-4" style="width: 100%; max-width: 600px; border: none; border-radius: 12px; background: linear-gradient(135deg, #d4e4f7, #c6b7a3);">
-        <h2 class="text-center mb-4" style="color: #2b6cb0;">Edit Item</h2>
+<div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Edit Item</h1>
+        <p class="text-sm text-gray-600">Update item details, price, quantity and image.</p>
+    </div>
 
-        <!-- Error Messages -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    @if ($errors->any())
+        <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800">
+            <ul class="list-disc ms-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <!-- Form Starts -->
-        <form action="{{ route('items.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+    <div class="rounded-2xl bg-white/85 backdrop-blur-xl shadow-xl border border-white p-6">
+        <form action="{{ route('items.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
-                <label for="name" class="form-label" style="color: #2b6cb0;">Item Name</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $item->name) }}" required style="border-color: #6b705c;">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Item Name</label>
+                <input type="text" name="name" value="{{ old('name', $item->name) }}" required
+                    class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                           focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
             </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label" style="color: #2b6cb0;">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required style="border-color: #6b705c;">{{ old('description', $item->description) }}</textarea>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                <textarea name="description" rows="4" required
+                    class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                           focus:border-primary focus:ring-4 focus:ring-primary/20 transition">{{ old('description', $item->description) }}</textarea>
             </div>
 
-            <div class="mb-3">
-                <label for="price" class="form-label" style="color: #2b6cb0;">Price ($)</label>
-                <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price', $item->price) }}" required style="border-color: #6b705c;">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Price ($)</label>
+                    <input type="number" step="0.01" name="price" value="{{ old('price', $item->price) }}" required
+                        class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                               focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Quantity</label>
+                    <input type="number" name="quantity" value="{{ old('quantity', $item->quantity) }}" required
+                        class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                               focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="quantity" class="form-label" style="color: #2b6cb0;">Quantity</label>
-                <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $item->quantity) }}" required style="border-color: #6b705c;">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Color</label>
+                <input type="text" name="color" value="{{ old('color', $item->color) }}"
+                    class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                           focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
             </div>
 
-            <div class="mb-3">
-                <label for="color" class="form-label" style="color: #2b6cb0;">Color</label>
-                <input type="text" class="form-control" id="color" name="color" value="{{ old('color', $item->color) }}" required style="border-color: #6b705c;">
-            </div>
-
-            <div class="mb-3">
-                <label for="category_id" class="form-label" style="color: #2b6cb0;">Category</label>
-                <select class="form-control" id="category_id" name="category_id" required style="border-color: #6b705c;">
-                    <option value="" disabled>Select a Category</option>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                <select name="category_id" required
+                    class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                           focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id', $item->category_id) == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
@@ -60,22 +74,36 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label" style="color: #2b6cb0;">Image (Optional)</label>
-                <input type="file" class="form-control" id="image" name="image" style="border-color: #6b705c;">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Image (Optional)</label>
+                <input type="file" name="image"
+                    class="w-full rounded-xl border border-gray-200 bg-white/70 px-3 py-2 text-sm shadow-sm
+                           focus:border-primary focus:ring-4 focus:ring-primary/20 transition">
+
                 @if ($item->image)
-                    <small class="d-block mt-2" style="color: #6b705c;">Current Image:
-                        <img src="{{ asset('images/' . $item->image) }}" alt="current image" style="color: #2b6cb0;">View Current Image
-                    </small>
+                    <div class="mt-3 flex items-center gap-3">
+                        <img src="{{ asset('images/' . $item->image) }}" alt="current image"
+                             class="h-16 w-20 rounded-xl object-cover border border-gray-200">
+                        <div class="text-sm text-gray-600">
+                            <div class="font-semibold text-gray-800">Current image</div>
+                            <div class="text-xs">Upload a new one to replace it.</div>
+                        </div>
+                    </div>
                 @endif
             </div>
 
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <a href="{{ route('items.index') }}"
+                   class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                    Cancel
+                </a>
 
-            <button type="submit" class="btn btn-primary w-100" style="background-color: #2b6cb0; border-color: #2b6cb0; border-radius: 8px;">
-                Update Item
-            </button>
+                <button type="submit"
+                    class="rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-4 focus:ring-primary/25 transition">
+                    Update Item
+                </button>
+            </div>
         </form>
-        <!-- Form Ends -->
     </div>
 </div>
 @endsection
