@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
+use App\Models\Category;
+use App\Models\Item;
 
 class DashboardController extends Controller
 {
@@ -30,12 +32,20 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // LEFT slider (categories)
+        $categories = Category::latest()->get();
+
+        // RIGHT slider (items)
+        $items = Item::latest()->take(10)->get();
+
         return view('dashboard', [
             'totalOrders'     => $totalOrders,
             'pendingOrders'   => $pendingOrders,
             'completedOrders' => $completedOrders,
             'totalSpent'      => $totalSpent,
             'recentOrders'    => $recentOrders,
+            'categories'      => $categories,
+            'items'           => $items,
         ]);
     }
 }
